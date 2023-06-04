@@ -4,7 +4,7 @@ export default function Header() {
 
     const [show, setshow] = useState(false);
     return (
-        <div className="dark:bg-gray-800 dark:text-white">
+        <div className="fixed top-0 left-0 right-0 z-50 dark:bg-gray-800 dark:text-white">
             <nav className="2xl:container 2xl:mx-auto sm:py-6 sm:px-7 py-5 px-4">
                 {/* For large and Medium-sized Screen */}
                 <div className="flex justify-between ">

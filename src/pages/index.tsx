@@ -17,7 +17,8 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
         <Header></Header>
-      <main className="dark:bg-gray-800 flex min-h-screen flex-col items-center justify-center">
+        {/* TODO: later all pages should be using this template */}
+      <main className="dark:bg-gray-800 flex min-h-screen flex-col items-center justify-center pt-32">
         <TransactionForm/>
       </main>
         </div>
