@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import Transaction from "~/types/transaction";
 import TransactionCategory from "~/types/transaction-category";
 
 export default function TransactionForm() {
@@ -8,6 +9,12 @@ export default function TransactionForm() {
     const [selectedCategory, setSelectedCategory] = useState<number|undefined>(undefined);
     const [transactionAmount, setTranscationAmount] =  useState<number|undefined>(undefined);
     const [submitting, setSubmitting] = useState(false);
+    const [transactionUsers, setTransactionUsers] = useState<string[]>(["👦 Vytas", "👧 Gretule"]);
+    const [selectedUser, setSelectedUser] = useState("👦 Vytas");
+
+    const handleSelectUserChange = (event: any) => {
+        setSelectedUser(event.target.value);
+    };
 
     const handleCheckboxChange = () => {
         setIsSplitChecked(!isSplitChecked);
@@ -25,11 +32,14 @@ export default function TransactionForm() {
         event.preventDefault();
         setSubmitting(true);
 
-        // TODO: add object type
-        const requestData = {
+        const requestData: Transaction = {
+            // @ts-ignore
             category: transactionCategories.filter((category) => category.id == selectedCategory)[0],
-            transactionAmount: transactionAmount,
+            amount: transactionAmount ?? 0,
             isSplitChecked: isSplitChecked,
+            paidByUsername: selectedUser,
+            isSplit: isSplitChecked,
+            splitRatio: 45
         };
 
         const response = await fetch('http://localhost:3000/api/create-transaction', {
@@ -104,6 +114,24 @@ export default function TransactionForm() {
                         {transactionCategories.map(category => (
                             <option key={category.id} value={category.id}>
                                 {category.name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            </div>
+            <div className="flex -mx-3 mb-6 justify-center">
+                <div className="px-3">
+                    <label className="block uppercase tracking-wide text-xs font-bold mb-2"
+                        htmlFor="grid-password">
+                        Paid by:
+                    </label>
+                    <select className="appearance-none  text-black  block w-full bg-gray-200 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none  focus:border-emerald-500"
+                        onChange={handleSelectUserChange}
+                        value={selectedUser}
+                    >
+                        {transactionUsers.map(user => (
+                            <option key={user} value={user}>
+                                {user}
                             </option>
                         ))}
                     </select>

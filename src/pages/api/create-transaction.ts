@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import Transaction from '~/types/transaction';
 const fs = require('fs');
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     await insertTransaction(req.body);
@@ -6,7 +7,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 }
 
 // TODO: add transaction typew
-async function insertTransaction(transaction) {
+async function insertTransaction(transaction: Transaction) {
     const { GoogleAuth } = require('google-auth-library');
     const { google } = require('googleapis');
 
@@ -25,8 +26,15 @@ async function insertTransaction(transaction) {
 
     const nextEmptyRow = 397 + result.data.values.length;
 
+    const currentDate = new Date();
+    const month = currentDate.getMonth() + 1; // getMonth() returns zero-based month, so we add 1
+    const day = currentDate.getDate();
+    const year = currentDate.getFullYear();
+    
+    const formattedDate = `${month}/${day}/${year}`;
+
     const values = [
-        ['6/5/2023', `$${transaction.transactionAmount}`, '', transaction.category.name, '👦 Vytas', 'foobar description'],
+        [formattedDate, `$${transaction.amount}`, '', transaction.category.name, transaction.paidByUsername, JSON.stringify(transaction)],
     ];
 
     const resource = {
